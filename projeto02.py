@@ -17,7 +17,7 @@ st.set_page_config(
 st.write('# Análise exploratória da previsão de renda')
 
 renda = pd.read_csv('./input/previsao_de_renda.csv')
-
+renda['data_ref'] = pd.to_datetime(renda['data_ref'])
 
 with st.sidebar:
     st.title("Menu")
@@ -43,39 +43,59 @@ elif pagina == "Graficos ao longo do tempo":
     if viz_type == "posse_de_imovel e renda":
         st.subheader("posse_de_imovel e renda no tempo")
         
-        sns.lineplot(x='data_ref',y='renda', hue='posse_de_imovel',data=renda, ax=ax)
-        
+        fig, ax = plt.subplots(figsize=(10, 6))
+        sns.lineplot(x='data_ref', y='renda', hue='posse_de_imovel', data=renda, ax=ax)
+        plt.tight_layout()
+        st.pyplot(fig)
         
     elif viz_type == "posse_de_veiculo e renda":
         st.subheader("posse_de_veiculo e renda no tempo")
         
-        sns.lineplot(x='data_ref',y='renda', hue='posse_de_veiculo',data=renda, ax=ax)  
+        fig, ax = plt.subplots(figsize=(10, 6))
+        sns.lineplot(x='data_ref', y='renda', hue='posse_de_veiculo', data=renda, ax=ax)  
+        plt.tight_layout()
+        st.pyplot(fig)
         
     elif viz_type == "qtd_filhos e renda":
         st.subheader("qtd_filhos e renda no tempo")
         
-        sns.lineplot(x='data_ref',y='renda', hue='qtd_filhos',data=renda,ax=ax)
-        
+        fig, ax = plt.subplots(figsize=(10, 6))
+        sns.lineplot(x='data_ref', y='renda', hue='qtd_filhos', data=renda, ax=ax)
+        plt.tight_layout()
+        st.pyplot(fig)
         
     elif viz_type == "tipo_renda e renda":
         st.subheader("tipo_renda e renda no tempo")
         
-        sns.lineplot(x='data_ref',y='renda', hue='tipo_renda',data=renda,ax=ax)
+        fig, ax = plt.subplots(figsize=(10, 6))
+        sns.lineplot(x='data_ref', y='renda', hue='tipo_renda', data=renda, ax=ax)
+        plt.tight_layout()
+        st.pyplot(fig)
                 
     elif viz_type == "educacao e renda":
         st.subheader("educacao e renda no tempo")
 
-        sns.lineplot(x='data_ref',y='renda', hue='educacao',data=renda,ax=ax)
+        fig, ax = plt.subplots(figsize=(10, 6))
+        sns.lineplot(x='data_ref', y='renda', hue='educacao', data=renda, ax=ax)
+        plt.tight_layout()
+        st.pyplot(fig)
 
     elif viz_type == "estado_civil e renda":
         st.subheader("estado_civil e renda no tempo")
 
-        sns.lineplot(x='data_ref',y='renda', hue='estado_civil',data=renda,ax=ax)
+        fig, ax = plt.subplots(figsize=(10, 6))
+        sns.lineplot(x='data_ref', y='renda', hue='estado_civil', data=renda, ax=ax)
+        plt.tight_layout()
+        st.pyplot(fig)
     
     elif viz_type == "tipo_residencia e renda":
         st.subheader("tipo_residencia e renda no tempo")
         
-        sns.lineplot(x='data_ref',y='renda', hue='tipo_residencia',data=renda)
+        fig, ax = plt.subplots(figsize=(10, 6))
+        sns.lineplot(x='data_ref', y='renda', hue='tipo_residencia', data=renda, ax=ax)
+        plt.tight_layout()
+        st.pyplot(fig)
+
 
 elif pagina == "Analise bivariada":
     st.subheader("Analise bivariada")
@@ -93,18 +113,18 @@ elif pagina == "Analise bivariada":
         for var in vars_categoricas:
             fig, axes = plt.subplots(1, 2, figsize=(14, 5))
             
-            sns.boxplot(x= var, y='renda', data=renda, ax=axes[0] )
+            sns.boxplot(x=var, y='renda', data=renda, ax=axes[0])
             
             axes[0].set_title(f"Boxplot: Renda x {var}")
             axes[0].tick_params(axis='x', rotation=45)
             
-            sns.barplot(x=var , y='renda', data=renda, estimator=np.mean, ax=axes[1])
+            sns.barplot(x=var, y='renda', data=renda, estimator=np.mean, ax=axes[1])
             
             axes[1].set_title(f"Média de Renda por {var}")
             axes[1].tick_params(axis='x', rotation=45)
             
             plt.tight_layout()
-            plt.show()
+            st.pyplot(fig)  
 
           
     elif viz_type == "Variaveis numericas":
@@ -131,19 +151,20 @@ elif pagina == "Analise bivariada":
             plt.xticks(rotation=45)
             
             plt.tight_layout()
-            plt.show()
+            st.pyplot(fig)
+
 
 elif pagina == "Modelo e resultados":
     st.subheader("escolha o modelo")
     st.write(' como visto nas analises bivariadas, muitas das relações entre as variavel e renda sao não lineares, sendo assim, o melhor modelo dentro dos modelos ja aprendidos é o de arvore de decisão.')
     
     st.write('Apos o treinamento do modelo, foram obtidos os seguintes resultados:')
-    st.write('mse treino 35031681.33833955')
-    st.write('r2 treino 0.4884241462336273')
+    st.write('mse treino: 35031681.33833955')
+    st.write('r2 treino: 0.4884241462336273')
     st.write('Erro Quadrático Médio teste: 34803648.74889145')
     st.write('Coeficiente de Determinação teste: 0.48641610431283133')
 
-    st.image("./output/arvore_regressao.png", caption='Visualização arvore de regressão', use_column_width=True)
+    st.image("./output/arvore_regressao.png", caption='Visualização arvore de regressão',  use_container_width=True)
 
 elif pagina == "Conclusão":
      st.subheader("Conclusão")
